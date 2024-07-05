@@ -2,12 +2,12 @@ import tkinter as tk
 from tkinter import messagebox
 import re
 
-# Função para validar o CPF
+# Validar o CPF
 def is_valid_cpf(cpf):
     if len(cpf) != 11 or cpf == cpf[0] * 11:
         return False
 
-    # Calculando o primeiro dígito verificador
+# 1º dígito verificador CPF
     sum = 0
     for i in range(9):
         sum += int(cpf[i]) * (10 - i)
@@ -15,7 +15,7 @@ def is_valid_cpf(cpf):
     if check_digit1 >= 10:
         check_digit1 = 0
 
-    # Calculando o segundo dígito verificador
+# 2º dígito verificador CPF
     sum = 0
     for i in range(10):
         sum += int(cpf[i]) * (11 - i)
@@ -25,12 +25,12 @@ def is_valid_cpf(cpf):
 
     return cpf[-2:] == f"{check_digit1}{check_digit2}"
 
-# Função para validar o CNPJ
+# Validar o CNPJ
 def is_valid_cnpj(cnpj):
     if len(cnpj) != 14 or cnpj == cnpj[0] * 14:
         return False
 
-    # Calculando o primeiro dígito verificador
+# 1º dígito verificador CNPJ
     sum = 0
     weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
     for i in range(12):
@@ -39,7 +39,7 @@ def is_valid_cnpj(cnpj):
     if check_digit1 >= 10:
         check_digit1 = 0
 
-    # Calculando o segundo dígito verificador
+ # 2º dígito verificador CNPJ
     sum = 0
     weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
     for i in range(13):
@@ -50,7 +50,7 @@ def is_valid_cnpj(cnpj):
 
     return cnpj[-2:] == f"{check_digit1}{check_digit2}"
 
-# Função para verificar se o CPF/CNPJ é válido
+# Verificar se o CPF/CNPJ é válido
 def is_valid_cpf_cnpj(value):
     clean_value = re.sub(r'\D', '', value)
     if len(clean_value) == 11:
@@ -65,7 +65,7 @@ def is_valid_cpf_cnpj(value):
             return "CNPJ inválido: Falha na verificação dos dígitos."
     return "CPF/CNPJ inválido: Número incorreto de dígitos."
 
-# Função para verificar se o CPF/CNPJ já está na lista
+# Verificar se o CPF/CNPJ já está na lista
 def is_unique(value):
     for idx in range(listbox_values.size()):
         item = listbox_values.get(idx)
@@ -73,7 +73,7 @@ def is_unique(value):
             return False
     return True
 
-# Função para adicionar CPF/CNPJ à lista negra
+# Adicionar CPF/CNPJ à lista
 def add_to_blacklist():
     value = entry_value.get()
     reason = entry_reason.get()
@@ -96,7 +96,7 @@ def add_to_blacklist():
     entry_value.delete(0, tk.END)
     entry_reason.delete(0, tk.END)
 
-# Função para pesquisar um CPF/CNPJ na lista
+# Pesquisar um CPF/CNPJ na lista
 def search_blacklist():
     search_value = entry_value.get()
     clean_search_value = is_valid_cpf_cnpj(search_value)
@@ -113,7 +113,7 @@ def search_blacklist():
     else:
         messagebox.showinfo("Resultados da Pesquisa", "Nenhum CPF/CNPJ encontrado.")
 
-# Função para deletar o CPF/CNPJ selecionado da lista
+# Deletar o CPF/CNPJ selecionado da lista
 def delete_from_blacklist():
     selected_items = listbox_values.curselection()
     if not selected_items:
@@ -125,37 +125,30 @@ def delete_from_blacklist():
         for index in selected_items:
             listbox_values.delete(index)
 
-# Criar a janela principal
+# Janela principal
 window = tk.Tk()
 window.title('Lista Negra Personalizada')
 
-# Rótulo e campo de entrada para CPF/CNPJ
 label_value = tk.Label(window, text='CPF/CNPJ:')
 label_value.grid(row=0, column=0, padx=5, pady=5)
 entry_value = tk.Entry(window)
 entry_value.grid(row=0, column=1, padx=5, pady=5)
 
-# Rótulo e campo de entrada para o motivo
 label_reason = tk.Label(window, text='Motivo:')
 label_reason.grid(row=1, column=0, padx=5, pady=5)
 entry_reason = tk.Entry(window)
 entry_reason.grid(row=1, column=1, padx=5, pady=5)
 
-# Botão para adicionar CPF/CNPJ
 button_add_value = tk.Button(window, text='Adicionar', command=add_to_blacklist)
 button_add_value.grid(row=0, column=2, padx=5, pady=5)
 
-# Botão para pesquisar CPF/CNPJ
 button_search_value = tk.Button(window, text='Pesquisar', command=search_blacklist)
 button_search_value.grid(row=1, column=2, padx=5, pady=5)
 
-# Botão para deletar CPF/CNPJ
 button_delete_value = tk.Button(window, text='Deletar', command=delete_from_blacklist)
 button_delete_value.grid(row=2, column=2, padx=5, pady=5)
 
-# Lista para exibir CPFs/CNPJs bloqueados
 listbox_values = tk.Listbox(window, width=50)
 listbox_values.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
 
-# Executar a interface
 window.mainloop()
