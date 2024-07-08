@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 import re
 
 # Validar o CPF
@@ -125,6 +125,18 @@ def delete_from_blacklist():
         for index in selected_items:
             listbox_values.delete(index)
 
+# Exportar lista de CPF/CNPJ             
+def export_blacklist():
+    file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
+    if not file_path:
+        return
+
+    with open(file_path, "w") as file:
+        for idx in range(listbox_values.size()):
+            file.write(listbox_values.get(idx) + "\n")
+
+    messagebox.showinfo("Exportação", "Lista exportada com sucesso!")
+
 # Janela principal
 window = tk.Tk()
 window.title('Lista Negra Personalizada')
@@ -147,6 +159,9 @@ button_search_value.grid(row=1, column=2, padx=5, pady=5)
 
 button_delete_value = tk.Button(window, text='Deletar', command=delete_from_blacklist)
 button_delete_value.grid(row=2, column=2, padx=5, pady=5)
+
+button_export_value = tk.Button(window, text='Exportar', command=export_blacklist)
+button_export_value.grid(row=3, column=2, padx=5, pady=5)
 
 listbox_values = tk.Listbox(window, width=50)
 listbox_values.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
